@@ -10,6 +10,12 @@ To checkout (with all submodules) use:
 git clone --recurse-submodules https://github.com/darchr/novoverse
 ```
 
+If you checked out this repo without `--recurse-submodules` then you can run the following to sync the `gem5/` directory.
+
+```sh
+git submodule update --init
+```
+
 When needed (e.g., when gem5 version 23.0 is released), to update the submodule, run the following command.
 
 ```sh
