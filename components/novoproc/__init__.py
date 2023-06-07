@@ -14,7 +14,7 @@ class NovoCore(BaseCPUCore):
         """
         """
         core = NovoO3CPU()
-        super().__init__(core, ISA.Arm)
+        super().__init__(core, ISA.ARM)
 
 class NovoProcessor(BaseCPUProcessor):
     """

@@ -22,6 +22,29 @@ When needed (e.g., when gem5 version 23.0 is released), to update the submodule,
 git submodule update --remote gem5
 ```
 
+## Building gem5
+
+After checking out the gem5 directory (See [above](#working-with-this-repository)), you need to build two versions of gem5, one with the `MESI_Three_Level` protocol to work with the Octopi cache and one with CHI to work with the Saga cache or the Novocache.
+
+```sh
+cd gem5
+scons build/ALL_MESI_Three_Level/gem5.opt -j `nproc` --default=ALL PROTOCOL=MESI_Three_Level
+scons build/ALL_CHI/gem5.opt -j `nproc` --default=ALL PROTOCOL=CHI
+```
+
+Note: If you're not making changes to gem5, you may want to build `gem5.fast` instead of `gem5.opt`.
+There is a significant performance improvement.
+
+## Running a workload
+
+To run a workload, use the `run_microbenchmark.py` script.
+Note that you have to use the `MESI_Three_Level` binary to use the Octopi cache and the `CHI` binary to use the Saga or Novocache.
+As mentioned above, you may want to use `gem5.fast` instead of `gem5.opt`.
+
+```sh
+gem5/build/ALL_MESI_Three_Level/gem5.opt run_microbenchmark.py
+```
+
 ## To do
 
-[ ] Get microbenchmarks into this repository. We probably want to have this as another submodule.
+- [ ] Add a parameter to `run_microbenchmark.py` to select the microbenchmark.
