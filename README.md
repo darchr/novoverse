@@ -81,6 +81,9 @@ E.g., to specialize the out-of-order core, modify the file `components/novoproc/
 The `microbench` directory is a submodule with the changes to the microbenchmarks found in prior work.
 This directory needs some work to the `Makefile`s and other parts of it to build and deploy the microbenchmarks.
 
+Once a microbenchmark is built (which we should provide details on how to do this in the README here!), then you should add it to the list of microbenchmarks.
+See the `workloads` dictionary in `microbench/__init__.py`.
+
 ## To do
 
 - [ ] Add the rest of the microbenchmarks.
