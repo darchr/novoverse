@@ -41,7 +41,6 @@ from .network import SagaSwitch, SagaIntLink, SagaExtLink
 
 
 class CoreComplex(SubSystem):
-
     _core_number = 0
 
     @classmethod
@@ -138,11 +137,17 @@ class CoreComplex(SubSystem):
             )
             int_links.extend([cluster.l2_l3_link, cluster.l3_l2_link])
 
-        self.l3_link = SagaExtLink(self.l3cache, self.l3_router)
+        self.l3_link = SagaExtLink(
+            self.l3cache, self.l3_router, bandwidth_factor=64
+        )
         ext_links.append(self.l3_link)
 
-        self.ccx_link_out = SagaIntLink(self.l3_router, dir_router)
-        self.ccx_link_in = SagaIntLink(dir_router, self.l3_router)
+        self.ccx_link_out = SagaIntLink(
+            self.l3_router, dir_router, bandwidth_factor=64
+        )
+        self.ccx_link_in = SagaIntLink(
+            dir_router, self.l3_router, bandwidth_factor=64
+        )
         int_links.extend([self.ccx_link_out, self.ccx_link_in])
 
         return (routers, ext_links, int_links)

@@ -60,7 +60,6 @@ class SagaNetwork(SimpleNetwork):
             self._int_links.extend(ils)
 
     def connect_directory_memory(self, directories, memory_controllers):
-
         self.mem_routers = [SagaSwitch(self) for _ in memory_controllers]
         self._routers.extend(self.mem_routers)
 
@@ -68,15 +67,19 @@ class SagaNetwork(SimpleNetwork):
         for directory, ctrl, router in zip(
             directories, memory_controllers, self.mem_routers
         ):
-            router.dm_link = SagaExtLink(directory, router)
-            router.md_link = SagaExtLink(ctrl, router)
+            router.dm_link = SagaExtLink(
+                directory, router, bandwidth_factor=32
+            )
+            router.md_link = SagaExtLink(ctrl, router, bandwidth_factor=32)
             self._ext_links.extend([router.dm_link, router.md_link])
 
         # Connect the memory routers to the dir_router
         self.dir_links = [
-            SagaIntLink(router, self.dir_router) for router in self.mem_routers
+            SagaIntLink(router, self.dir_router, bandwidth_factor=64)
+            for router in self.mem_routers
         ] + [
-            SagaIntLink(self.dir_router, router) for router in self.mem_routers
+            SagaIntLink(self.dir_router, router, bandwidth_factor=64)
+            for router in self.mem_routers
         ]
         self._int_links.extend(self.dir_links)
 
@@ -120,12 +123,12 @@ class SagaExtLink(SimpleExtLink):
         cls._version += 1  # Use count for this particular type
         return cls._version - 1
 
-    def __init__(self, ext_node, int_node):
+    def __init__(self, ext_node, int_node, bandwidth_factor=16):
         super().__init__()
         self.link_id = self.version_count()
         self.ext_node = ext_node
         self.int_node = int_node
-        self.bandwidth_factor = 384
+        self.bandwidth_factor = bandwidth_factor
 
 
 class SagaIntLink(SimpleIntLink):
@@ -138,9 +141,9 @@ class SagaIntLink(SimpleIntLink):
         cls._version += 1  # Use count for this particular type
         return cls._version - 1
 
-    def __init__(self, src_node, dst_node):
+    def __init__(self, src_node, dst_node, bandwidth_factor=16):
         super().__init__()
         self.link_id = self.version_count()
         self.src_node = src_node
         self.dst_node = dst_node
-        self.bandwidth_factor = 384
+        self.bandwidth_factor = bandwidth_factor
