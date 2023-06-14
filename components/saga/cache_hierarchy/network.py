@@ -125,7 +125,7 @@ class SagaExtLink(SimpleExtLink):
         self.link_id = self.version_count()
         self.ext_node = ext_node
         self.int_node = int_node
-        self.bandwidth_factor = 32
+        self.bandwidth_factor = 384
 
 
 class SagaIntLink(SimpleIntLink):
@@ -143,4 +143,4 @@ class SagaIntLink(SimpleIntLink):
         self.link_id = self.version_count()
         self.src_node = src_node
         self.dst_node = dst_node
-        self.bandwidth_factor = 32
+        self.bandwidth_factor = 384
