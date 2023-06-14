@@ -420,7 +420,7 @@ class SharedL3Cache(AbstractNode):
         self.dealloc_backinv_shared = False
 
         # Some reasonable default TBE params
-        self.number_of_TBEs = 16
+        self.number_of_TBEs = 128
         self.number_of_repl_TBEs = 16
         self.number_of_snoop_TBEs = 4
         self.number_of_DVM_TBEs = 16
