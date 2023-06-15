@@ -1,0 +1,53 @@
+{
+    "_author": "Hoa Nguyen <hoanguyen@ucdavis.edu>",
+    "_license": "Copyright (c) 2023 The Regents of the University of California. SPDX-License-Identifier: BSD 3-Clause",
+    "builders":
+    [
+        {
+            "type": "null",
+            "ssh_host": "localhost",
+            "ssh_port": "5555",
+            "ssh_username": "{{ user `ssh_username` }}",
+            "ssh_password": "{{ user `ssh_password` }}"
+        }
+    ],
+    "provisioners":
+    [
+        {
+            "type": "file",
+            "source": "rv64gc-hpc/gem5-init.sh",
+            "destination": "/home/ubuntu/"
+        },
+        {
+            "type": "file",
+            "source": "shared/serial-getty@.service",
+            "destination": "/home/ubuntu/"
+        },
+        {
+            "type": "file",
+            "source": "rv64gc-hpc/benchmark-configs",
+            "destination": "/home/ubuntu/benchmark-configs/"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts":
+            [
+                "rv64gc-hpc/packages-install.sh",
+                "rv64gc-hpc/m5-install.sh",
+                "rv64gc-hpc/stream-install.sh",
+                "rv64gc-hpc/gups-install.sh",
+                "rv64gc-hpc/npb-install.sh",
+                "rv64gc-hpc/spatter-install.sh",
+                "rv64gc-hpc/permutating-gather-install.sh",
+                "rv64gc-hpc/permutating-scatter-install.sh",
+                "rv64gc-hpc/memory-latency-test-install.sh"
+            ]
+        }
+    ],
+    "variables":
+    {
+        "ssh_password": "automato",
+        "ssh_username": "ubuntu"
+    }
+}

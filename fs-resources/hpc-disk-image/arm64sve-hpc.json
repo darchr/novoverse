@@ -1,0 +1,55 @@
+{
+    "_author": "Hoa Nguyen <hoanguyen@ucdavis.edu>",
+    "_license": "Copyright (c) 2023 The Regents of the University of California. SPDX-License-Identifier: BSD 3-Clause",
+    "builders":
+    [
+        {
+            "type": "null",
+            "ssh_host": "localhost",
+            "ssh_port": "5555",
+            "ssh_username": "{{ user `ssh_username` }}",
+            "ssh_agent_auth": true,
+            "ssh_ciphers":  ["aes128-gcm@openssh.com", "chacha20-poly1305@openssh.com", "aes128-ctr", "aes192-ctr", "aes256-ctr"],
+            "ssh_certificate_file": "~/.ssh/id_rsa_arm_disk",
+            "ssh_clear_authorized_keys": true
+        }
+    ],
+    "provisioners":
+    [
+        {
+            "type": "file",
+            "source": "arm64sve-hpc/gem5-init.sh",
+            "destination": "/home/ubuntu/"
+        },
+        {
+            "type": "file",
+            "source": "shared/serial-getty@.service",
+            "destination": "/home/ubuntu/"
+        },
+        {
+            "type": "file",
+            "source": "arm64sve-hpc/benchmark-configs",
+            "destination": "/home/ubuntu/benchmark-configs/"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts":
+            [
+                "arm64sve-hpc/packages-install.sh",
+                "arm64sve-hpc/m5-install.sh",
+                "arm64sve-hpc/stream-install.sh",
+                "arm64sve-hpc/gups-install.sh",
+                "arm64sve-hpc/npb-install.sh",
+                "arm64sve-hpc/spatter-install.sh",
+                "arm64sve-hpc/permutating-gather-install.sh",
+                "arm64sve-hpc/permutating-scatter-install.sh",
+                "arm64sve-hpc/memory-latency-test-install.sh"
+            ]
+        }
+    ],
+    "variables":
+    {
+        "ssh_username": "ubuntu"
+    }
+}
