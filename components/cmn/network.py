@@ -55,7 +55,11 @@ class BaseSystemNetwork(SimpleNetwork):
         for tile, cache_slice, router in zip(
             core_tiles, system_caches, self.system_routers
         ):
-            slice_links.append(ExtLink(cache_slice, router))
+            router.ext_routing_latency = 7
+            router.int_routing_latency = 10
+            slice_links.append(
+                ExtLink(cache_slice, router, bandwidth_factor=64)
+            )
             rs, els, ils = tile.setup_network(self, router)
             self._routers.extend(rs)
             self._ext_links.extend(els)
@@ -72,7 +76,9 @@ class BaseSystemNetwork(SimpleNetwork):
         ]
         memory_links = []
         for ctrl, router in zip(memory_controllers, self.memory_routers):
-            memory_links.append(ExtLink(ctrl, router))
+            router.ext_routing_latency = 10
+            router.int_routing_latency = 10
+            memory_links.append(ExtLink(ctrl, router, bandwidth_factor=64))
         self.memory_links = memory_links
 
         self._routers.extend(self.memory_routers)
@@ -86,7 +92,9 @@ class BaseSystemNetwork(SimpleNetwork):
         ]
         dma_links = []
         for ctrl, router in zip(dma_controllers, self.dma_routers):
-            dma_links.append(ExtLink(ctrl, router))
+            router.ext_routing_latency = 10
+            router.int_routing_latency = 10
+            dma_links.append(ExtLink(ctrl, router, bandwidth_factor=64))
         self.dma_links = dma_links
 
         self._routers.extend(self.dma_routers)
@@ -155,9 +163,10 @@ class MeshSystemNetwork(BaseSystemNetwork):
                     links.append(IntLink(current_router, previous_router))
                     links.append(IntLink(previous_router, current_router))
 
-        routers = self.memory_routers
         if self._has_dma:
-            routers += self.dma_routers
+            routers = self.memory_routers + self.dma_routers
+        else:
+            routers = self.memory_routers
 
         i = 0
         j = ceil(height / 2) + 1

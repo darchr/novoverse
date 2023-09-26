@@ -75,13 +75,25 @@ class CoreTile(SubSystem):
 
         for cluster in self.core_clusters:
             cluster.router = CMNSwitch(network)
-            cluster.icache_link = ExtLink(cluster.icache, cluster.router)
-            cluster.dcache_link = ExtLink(cluster.dcache, cluster.router)
-            cluster.l2_link = ExtLink(cluster.l2cache, cluster.router)
+            cluster.router.ext_routing_latency = 2
+            cluster.router.int_routing_latency = 5
+            cluster.icache_link = ExtLink(
+                cluster.icache, cluster.router, bandwidth_factor=16
+            )
+            cluster.dcache_link = ExtLink(
+                cluster.dcache, cluster.router, bandwidth_factor=16
+            )
+            cluster.l2_link = ExtLink(
+                cluster.l2cache, cluster.router, bandwidth_factor=16
+            )
             routers.append(cluster.router)
 
-            cluster.l2_system_link = IntLink(cluster.router, system_router)
-            cluster.system_l2_link = IntLink(system_router, cluster.router)
+            cluster.l2_system_link = IntLink(
+                cluster.router, system_router, bandwidth_factor=32
+            )
+            cluster.system_l2_link = IntLink(
+                system_router, cluster.router, bandwidth_factor=32
+            )
             ext_links.extend(
                 [
                     cluster.icache_link,

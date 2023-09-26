@@ -42,7 +42,7 @@ from gem5.coherence_protocol import CoherenceProtocol
 from gem5.components.boards.abstract_board import AbstractBoard
 
 from .core_tile import CoreTile
-from .network import Pt2PtSystemNetwork, MeshSystemNetwork
+from .network import MeshSystemNetwork
 
 from gem5.components.cachehierarchies.chi.nodes.dma_requestor import (
     DMARequestor,
@@ -87,12 +87,9 @@ class CoherentMeshNetwork(AbstractRubyCacheHierarchy):
         self.ruby_system.number_of_virtual_networks = 4
 
         # Ruby's global network.
-        self.ruby_system.network = Pt2PtSystemNetwork(
+        self.ruby_system.network = MeshSystemNetwork(
             self.ruby_system, self.ruby_system.number_of_virtual_networks
         )
-        # self.ruby_system.network = MeshSystemNetwork(
-        #     self.ruby_system, self.ruby_system.number_of_virtual_networks
-        # )
 
         # Create the coherent side of the memory controllers
         memory_controllers = []
