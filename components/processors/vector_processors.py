@@ -31,6 +31,18 @@ class SimpleVectorProcessor(BaseCPUProcessor):
         )
 
 
+class NovoVectorProcessor(BaseCPUProcessor):
+    def __init__(
+        self, num_cores: int, isa_vector_parameters: BaseVectorParameters
+    ):
+        super().__init__(
+            cores=[
+                NovoVectorCore(core_id, isa_vector_parameters)
+                for core_id in range(num_cores)
+            ]
+        )
+
+
 class SimpleSwitchableVectorProcessor(SwitchableProcessor):
     def __init__(
         self,

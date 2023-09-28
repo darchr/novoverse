@@ -2,8 +2,8 @@ from m5.objects import DDR4_2400_16x4
 from m5.objects import ArmDefaultRelease
 from m5.objects import VExpress_GEM5_Foundation
 
-from gem5.components.isas import ISA
-from gem5.components.utils.override import overrides
+from gem5.isas import ISA
+from gem5.utils.override import overrides
 from gem5.components.boards.arm_board import ArmBoard
 from gem5.components.memory.memory import ChanneledMemory
 from gem5.components.processors.cpu_types import CPUTypes
@@ -11,7 +11,11 @@ from gem5.components.boards.simple_board import SimpleBoard
 
 
 from ..cmn import CoherentMeshNetwork
-from ..processors import SwitchableNovoVectorProcessor, ARM_SVE_Parameters
+from ..processors import (
+    SwitchableNovoVectorProcessor,
+    NovoVectorProcessor,
+    ARM_SVE_Parameters,
+)
 
 
 class NovoverseSystemFS(ArmBoard):
@@ -56,9 +60,7 @@ class NovoverseSystemFS(ArmBoard):
 class NovoverseSystemSE(SimpleBoard):
     def __init__(self, clk_freq, num_cores, num_channels, vlen):
         sve_parameters = ARM_SVE_Parameters(vlen=vlen, is_fullsystem=False)
-        processor = SwitchableNovoVectorProcessor(
-            CPUTypes.ATOMIC, num_cores, ISA.ARM, sve_parameters
-        )
+        processor = NovoVectorProcessor(num_cores, sve_parameters)
         memory = ChanneledMemory(
             dram_interface_class=DDR4_2400_16x4,
             num_channels=num_channels,

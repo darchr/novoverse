@@ -8,7 +8,7 @@ from gem5.components.processors.cpu_types import CPUTypes
 from gem5.components.processors.simple_core import SimpleCore
 
 
-from ..novocore import NovoCore
+from .novocore import NovoCore
 
 
 class BaseVectorParameters:
