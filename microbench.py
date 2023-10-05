@@ -1,12 +1,15 @@
 import os
+import argparse
 
 
-def run_microbench(benchmark):
+def run_microbench(inputs):
     import m5
 
-    from microbench_vertical import workloads
+    from microbenchmarks import workloads
     from gem5.simulate.simulator import Simulator
     from components.systems import NovoverseSystemSE
+
+    benchmark = inputs[0]
 
     system = NovoverseSystemSE(
         clk_freq="4GHz", num_cores=8, num_channels=4, vlen=256
@@ -18,3 +21,18 @@ def run_microbench(benchmark):
 
     simulator = Simulator(system)
     simulator.run()
+
+
+def get_inputs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "benchmark",
+        type=str,
+        help="Name of benchmark to run",
+    )
+    args = parser.parse_args()
+    return [args.benchmark]
+
+
+if __name__ == "__m5_main__":
+    run_microbench(get_inputs())
