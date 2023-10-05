@@ -6,3 +6,6 @@
 	path = microbench
 	url = https://github.com/darchr/microbench
 	branch = novoverse
+[submodule "microbenchmarks"]
+	path = microbenchmarks
+	url = git@github.com:mahyarsamani/microbenchmarks.git
