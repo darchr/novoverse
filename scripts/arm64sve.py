@@ -1,6 +1,9 @@
 import argparse
 
+from util import novoverse
 
+
+@novoverse
 def run_novoverse_fs(inputs):
     import m5
 

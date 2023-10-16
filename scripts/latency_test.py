@@ -1,7 +1,10 @@
 import os
 import argparse
 
+from util import novoverse
 
+
+@novoverse
 def generate_traces(num_cores, sharing, addr, size, src_id, dst_id, outdir):
     rd_perc = {"read": 100, "write": 0}
 
@@ -77,11 +80,11 @@ def run_core_to_core_latency(inputs):
 
     generator = TrafficGenerator(
         generate_traces(
-            32, sharing, addr, size, src_id, dst_id, m5.options.outdir
+            8, sharing, addr, size, src_id, dst_id, m5.options.outdir
         )
     )
     memory = ChanneledMemory(DDR4_2400_8x8, 4, 128, size="16GiB")
-    cache = CoherentMeshNetwork()
+    cache = CoherentMeshNetwork(slice_interleaving_size="512KiB")
     board = TestBoard(
         clk_freq="4GHz",
         generator=generator,

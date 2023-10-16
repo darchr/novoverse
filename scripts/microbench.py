@@ -1,7 +1,10 @@
 import os
 import argparse
 
+from util import novoverse
 
+
+@novoverse
 def run_microbench(inputs):
     import m5
 

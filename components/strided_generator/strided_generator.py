@@ -38,20 +38,22 @@ class StridedGenerator(AbstractGenerator):
         duration: str = "1ms",
         rate: str = "100GB/s",
         block_size: int = 64,
+        superblock_size: int = 64,
+        stride_size: int = None,
         min_addr: int = 0,
         max_addr: int = 32768,
         rd_perc: int = 100,
         data_limit: int = 0,
-        stride_size: int = None
     ) -> None:
         if stride_size is None:
-            stride_size = num_cores * block_size
+            stride_size = num_cores * superblock_size
         super().__init__(
             cores=self._create_cores(
                 num_cores=num_cores,
                 duration=duration,
                 rate=rate,
                 block_size=block_size,
+                superblock_size=superblock_size,
                 stride_size=stride_size,
                 min_addr=min_addr,
                 max_addr=max_addr,
@@ -66,6 +68,7 @@ class StridedGenerator(AbstractGenerator):
         duration: str,
         rate: str,
         block_size: int,
+        superblock_size: int,
         stride_size: int,
         min_addr: int,
         max_addr: int,
@@ -74,17 +77,18 @@ class StridedGenerator(AbstractGenerator):
     ) -> List[StridedGeneratorCore]:
         return [
             StridedGeneratorCore(
-                gen_id = _id,
                 duration=duration,
                 rate=rate,
                 block_size=block_size,
+                superblock_size=superblock_size,
                 stride_size=stride_size,
                 min_addr=min_addr,
                 max_addr=max_addr,
+                offset=i * superblock_size,
                 rd_perc=rd_perc,
                 data_limit=data_limit,
             )
-            for _id in range(num_cores)
+            for i in range(num_cores)
         ]
 
     @overrides(AbstractGenerator)

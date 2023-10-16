@@ -29,35 +29,40 @@ from m5.util.convert import toLatency, toMemoryBandwidth
 from m5.objects import PyTrafficGen, Port, BaseTrafficGen
 
 from gem5.components.processors.abstract_core import AbstractCore
-from gem5.components.processors.abstract_generator_core import AbstractGeneratorCore
+from gem5.components.processors.abstract_generator_core import (
+    AbstractGeneratorCore,
+)
 
 from gem5.utils.override import overrides
 
 from typing import Iterator
 
+
 class StridedGeneratorCore(AbstractGeneratorCore):
     def __init__(
         self,
-        gen_id: int,
         duration: str,
         rate: str,
         block_size: int,
+        superblock_size: int,
         stride_size: int,
         min_addr: int,
         max_addr: int,
+        offset: int,
         rd_perc: int,
         data_limit: int,
     ) -> None:
         super().__init__()
 
         self.generator = PyTrafficGen()
-        self._id = gen_id
         self._duration = duration
         self._rate = rate
         self._block_size = block_size
+        self._superblock_size = superblock_size
         self._stride_size = stride_size
         self._min_addr = min_addr
         self._max_addr = max_addr
+        self._offset = offset
         self._rd_perc = rd_perc
         self._data_limit = data_limit
 
@@ -78,9 +83,10 @@ class StridedGeneratorCore(AbstractGeneratorCore):
             duration,
             self._min_addr,
             self._max_addr,
+            self._offset,
             self._block_size,
+            self._superblock_size,
             self._stride_size,
-            self._id,
             min_period,
             max_period,
             self._rd_perc,
