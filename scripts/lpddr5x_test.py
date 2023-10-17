@@ -28,6 +28,7 @@ def run_lpddr5x_test():
         stride_size=4096,
         min_addr=0,
         max_addr=memory.get_size(),
+        data_limit=2048,
     )
 
     board = TestBoard(

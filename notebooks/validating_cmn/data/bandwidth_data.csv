@@ -1,4 +1,4 @@
-,Sharing,Address,Size,Provider,Receiver,Latency (GB/s)
+,Sharing,Address,Size,Provider,Receiver,Bandwidth (GB/s)
 0,read,0,64,1,0,19.726833130673306
 1,write,0,64,1,0,25.51823678564463
 2,write,0,8,1,0,2.8439505824521043

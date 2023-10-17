@@ -1,5 +1,5 @@
 def novoverse(run):
-    def wrapper():
+    def wrapper(*args, **kwargs):
         import sys
         from pathlib import Path
 
@@ -7,6 +7,6 @@ def novoverse(run):
         to_append = str(here.resolve().parent.parent.parent)
 
         sys.path.append(to_append)
-        run()
+        run(*args, **kwargs)
 
     return wrapper

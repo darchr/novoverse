@@ -4,7 +4,6 @@ import argparse
 from util import novoverse
 
 
-@novoverse
 def generate_traces(num_cores, sharing, addr, size, src_id, dst_id, outdir):
     rd_perc = {"read": 100, "write": 0}
 
@@ -55,6 +54,7 @@ def generate_traces(num_cores, sharing, addr, size, src_id, dst_id, outdir):
     return ret
 
 
+@novoverse
 def run_core_to_core_latency(inputs):
     import m5
 
