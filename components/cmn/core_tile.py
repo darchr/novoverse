@@ -78,21 +78,21 @@ class CoreTile(SubSystem):
             cluster.router.ext_routing_latency = 2
             cluster.router.int_routing_latency = 5
             cluster.icache_link = ExtLink(
-                cluster.icache, cluster.router, bandwidth_factor=16
+                cluster.icache, cluster.router, bandwidth_factor=64
             )
             cluster.dcache_link = ExtLink(
-                cluster.dcache, cluster.router, bandwidth_factor=16
+                cluster.dcache, cluster.router, bandwidth_factor=256
             )
             cluster.l2_link = ExtLink(
-                cluster.l2cache, cluster.router, bandwidth_factor=16
+                cluster.l2cache, cluster.router, bandwidth_factor=256
             )
             routers.append(cluster.router)
 
             cluster.l2_system_link = IntLink(
-                cluster.router, system_router, bandwidth_factor=32
+                cluster.router, system_router, bandwidth_factor=256
             )
             cluster.system_l2_link = IntLink(
-                system_router, cluster.router, bandwidth_factor=32
+                system_router, cluster.router, bandwidth_factor=256
             )
             ext_links.extend(
                 [
@@ -190,6 +190,10 @@ class CoreTile(SubSystem):
 
         return cluster
 
+    def set_l2_size(self, l2_size: str):
+        for cluster in self.core_clusters:
+            cluster.l2cache.cache.size = l2_size
+
 
 class PrivateL1Cache(AbstractNode):
     def __init__(
@@ -228,6 +232,7 @@ class PrivateL1Cache(AbstractNode):
         self.alloc_on_readunique = True
         self.alloc_on_readonce = True
         self.alloc_on_writeback = False  # Should never happen in an L1
+        self.alloc_on_atomic = False
 
         ###########################
         # Don't apply to L1
@@ -238,8 +243,8 @@ class PrivateL1Cache(AbstractNode):
         ###########################
 
         # Some reasonable default TBE params
-        self.number_of_TBEs = 16
-        self.number_of_repl_TBEs = 16
+        self.number_of_TBEs = 20
+        self.number_of_repl_TBEs = 20
         self.number_of_snoop_TBEs = 4
         self.number_of_DVM_TBEs = 16
         self.number_of_DVM_snoop_TBEs = 4
@@ -297,6 +302,7 @@ class PrivateL2Cache(AbstractNode):
         self.alloc_on_readshared = True
         self.alloc_on_readunique = True
         self.alloc_on_readonce = True
+        self.alloc_on_atomic = False
         self.dealloc_on_unique = False
         self.dealloc_on_shared = False
         self.dealloc_backinv_unique = True
@@ -305,8 +311,8 @@ class PrivateL2Cache(AbstractNode):
         ###########################
 
         # Some reasonable default TBE params
-        self.number_of_TBEs = 16
-        self.number_of_repl_TBEs = 16
+        self.number_of_TBEs = 46
+        self.number_of_repl_TBEs = 46
         self.number_of_snoop_TBEs = 4
         self.number_of_DVM_TBEs = 16
         self.number_of_DVM_snoop_TBEs = 4

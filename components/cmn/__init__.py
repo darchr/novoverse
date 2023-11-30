@@ -106,11 +106,10 @@ class CoherentMeshNetwork(AbstractRubyCacheHierarchy):
         self._num_tiles = len(cores) // self._cores_per_tile
         assert self._num_tiles & (self._num_tiles - 1) == 0
 
-        mem_start_addr = board.get_memory().get_start_addr()
-        mem_size = board.get_memory().get_size()
+        mem_range = board.get_memory().get_monolithic_range()
         tile_ranges = self._intlv_memory_for_tiles(
-            mem_start_addr,
-            mem_size,
+            mem_range.start,
+            mem_range.size(),
             int(len(cores) / self._cores_per_tile),
             self._slice_interleaving_size,
         )
@@ -226,6 +225,10 @@ class CoherentMeshNetwork(AbstractRubyCacheHierarchy):
             for i in range(num_tiles)
         ]
 
+    def set_l2_size(self, l2_size: str):
+        for tile in self.core_tiles:
+            tile.set_l2_size(l2_size)
+
 
 class SystemLevelCache(AbstractNode):
     """This cache assumes that it is a shared victim L3.
@@ -272,6 +275,8 @@ class SystemLevelCache(AbstractNode):
         # insert on writeback (victim cache)
         self.alloc_on_writeback = True
 
+        # Only cache atomics in SLC
+        self.alloc_on_atomic = True
         # Keep the line if a requestor asks for unique/shared
         ###########################
         self.dealloc_on_unique = False
@@ -283,9 +288,9 @@ class SystemLevelCache(AbstractNode):
         self.dealloc_backinv_shared = False
 
         # Some reasonable default TBE params
-        self.number_of_TBEs = 128
-        self.number_of_repl_TBEs = 128
-        self.number_of_snoop_TBEs = 4
+        self.number_of_TBEs = 64
+        self.number_of_repl_TBEs = 64
+        self.number_of_snoop_TBEs = 8
         self.number_of_DVM_TBEs = 16
         self.number_of_DVM_snoop_TBEs = 4
         self.unify_repl_TBEs = False

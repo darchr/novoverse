@@ -58,7 +58,7 @@ class BaseSystemNetwork(SimpleNetwork):
             router.ext_routing_latency = 7
             router.int_routing_latency = 10
             slice_links.append(
-                ExtLink(cache_slice, router, bandwidth_factor=64)
+                ExtLink(cache_slice, router, bandwidth_factor=128)
             )
             rs, els, ils = tile.setup_network(self, router)
             self._routers.extend(rs)
@@ -176,8 +176,8 @@ class MeshSystemNetwork(BaseSystemNetwork):
             if j < 0:
                 j = height - 1
             system_router = self.system_routers[j * width + i]
-            links.append(IntLink(router, system_router))
-            links.append(IntLink(system_router, router))
+            links.append(IntLink(router, system_router, bandwidth_factor=64))
+            links.append(IntLink(system_router, router, bandwidth_factor=64))
             i, j = self._rotate(width, height, i, j)
 
         self.system_links = links

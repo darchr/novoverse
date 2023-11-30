@@ -7,7 +7,7 @@ from m5.objects import (
 
 from m5.objects.FUPool import *
 
-from m5.objects.BranchPredictor import BiModeBP
+from m5.objects.BranchPredictor import BiModeBP, SimpleBTB
 
 
 class O3_ARM_Neoverse_N1_FP(FUDesc):
@@ -158,8 +158,7 @@ class O3_ARM_Neoverse_N1_BP(BiModeBP):
     globalCtrBits = 2
     choicePredictorSize = 8192
     choiceCtrBits = 2
-    BTBEntries = 4096
-    BTBTagSize = 18
+    btb = SimpleBTB(numEntries=4096, tagBits=18)
     RASSize = 16
     instShiftAmt = 2
 
